@@ -8,7 +8,6 @@ class RecentSearchModel {
         try {
             let sugArr = JSON.parse(stringData);
             sugArr.forEach((item:any) => {
-                console.log(item)
                 if (item.hasOwnProperty("suggestion") && item["suggestion"] !== "" && item.hasOwnProperty("uuid") && item["uuid"] !== "") {
                     foundList.push({
                         suggestion: item["suggestion"],

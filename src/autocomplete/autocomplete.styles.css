@@ -1,3 +1,37 @@
 .autocomplete {
+    width: 50%;
+    padding: 8px;
+}
+
+.autocomplete-input {
     width: 100%;
+    border-radius: 4px;
+    border: 1px solid blue;
+    height: 30px;
+}
+
+.autocomplete-suggestion {
+    width: 100%;
+    border: 0 0 4px 4px;
+    box-shadow: 5px 5px 5px silver;
+
+    display: flex;
+    flex-direction: column;
+
+    cursor: pointer;
+}
+
+.autocomplete-suggestion-item {
+    padding: 4px;
+}
+.autocomplete-suggestion-item:hover {
+    background-color: silver;
+}
+
+.autocomplete-search-outcome {
+    width: 100%;
+    margin-top: 8px;
+
+    display: flex;
+    flex-direction: column;
 }
