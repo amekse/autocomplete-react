@@ -7,11 +7,12 @@ function App() {
   const [searched, setSearched] = useState<string | false | 'searching'>(false);
 
   const handleSearchCall = async(searchContent:{id?: string, text?: string}) => {
+    setSearched('searching');
     if (searchContent.id) {
       let searchedData = await fetchSearched(searchContent.id);
       setSearched(searchedData);
     } else {
-      setSearched(`We don't have direct search feature yet. So no results found for ${searchContent.text}`);
+      setSearched(`We don't have direct search feature yet. So no results found for ${searchContent.text}.`);
     }
   }
 
