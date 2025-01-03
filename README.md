@@ -1,46 +1,68 @@
-# Getting Started with Create React App
+# Auto-Complete Component
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Overview
+This project is a standalone auto-complete component built with React and TypeScript. It mimics the functionality of Google Search, offering a seamless user experience with efficient search suggestions and a clean UI.
 
-## Available Scripts
+## Features
+- Real-time Suggestions: Fetches suggestions from an API as the user types.
+- Cached Suggestions: Recently fetched suggestions are cached in memory to minimize API calls.
+- Search History: Stores the last 10-15 searches locally and displays them as suggestions when the search box is empty.
+- Highlight Matches: Highlights matching parts of the suggestion text for better visual guidance.
+- Distinct Styling for History: Suggestions from the search history are italicized for easy differentiation.
+- Efficient Handling:
+  - Highlights matching parts in O(n) complexity.
+  - Throttles API calls for optimized performance.
+  - Loads the last suggestions on focus without re-calling the API.
 
-In the project directory, you can run:
+## Key Props
+### Required Props:
+- `suggestionApiCall`: To make the Suggestions API calls.
+  - Params: `search` _string on which suggestions will be checked_
+  - Returns: _A list of Promise having list of suggested strings_
+- `searchApiCall`: To the Search API call
+  - Params: `search` _string/id/state name on which search should happen_
 
-### `yarn start`
+### Optional Props:
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+- `throttleTime`: Set how much time the throttle function should wait before next api call.
+- `userLastSearchMemoryLimit`: Set how much time the throttle function should wait before next api call.
+- `suggestionsLimit`: Set how many suggestions to show.
+- `style`: Object to provide custom styles from parent level.
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+## Architecture
+The component is designed with a modular and reusable approach, adhering to clean code practices:
 
-### `yarn test`
+- Models (POJO): Used to define reusable data structures.
+- Systems for Modularity: Side-effects are handled systematically to maintain a clear separation of concerns.
+- Local Storage: Utilized for storing search history persistently.
+- In-Memory Cache: For fast retrieval of recent suggestions.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Usage
 
-### `yarn build`
+```
+<AutoComplete suggestionApiCall={myOwnSuggestionsAPI} searchApiCall={myOwnSearchAPI} />
+```
+ 
+### Implementation Highlights
+- Fetching Suggestions: API calls are throttled to optimize performance and prevent overloading the server.
+- Caching:
+- Memory caching avoids redundant API requests for recent suggestions.
+- Local storage preserves search history between sessions.
+- Highlighting Matches: An efficient algorithm ensures highlighting is performed in O(n) time complexity.
+- Search Triggering:
+  - Enter: Triggers searchApiCall. (Currently returns "data not found.")
+  - Suggestion Click: Searches data by suggestion ID.
+  - Loading State: Displayed during search.
+- User-Friendly UX:
+Suggestions display instantly from memory or local storage.
+- Italicized history suggestions distinguish them from real-time API results.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Demo
+A short video demonstrating the component is available [here](https://drive.google.com/file/d/1SdSP2joQ0JsDs3LOws8qlfNb4ar2T8qB/view?usp=sharing).
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### Future Enhancements
+- Integrate advanced analytics for suggestion ranking.
+- Improve accessibility with ARIA attributes.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `yarn eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+### License
+This project is licensed under the MIT License.
