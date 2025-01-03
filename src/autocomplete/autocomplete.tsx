@@ -6,6 +6,7 @@ import "./autocomplete.styles.css";
 import SuggestionModel from "./model/suggestions.model";
 import { searchOnKeyUp } from "./common.constants";
 import currentCachedModel from "./model/currentCached.model";
+import Highlighter from "./highlighter.component";
 
 function AutoComplete(props:AutocompleteProps) {
     const { suggestionApiCall, searchApiCall, suggestionsLimit = 5, userLastSearchMemoryLimit = 10, throttleTime = 300, style } = props;
@@ -99,7 +100,7 @@ function AutoComplete(props:AutocompleteProps) {
                 searchFocused && (
                     <div className="autocomplete-suggestion">
                         {
-                            suggestions.get().map(sugObj => <span key={sugObj.uuid} id={sugObj.uuid} onClick={_ => handleSuggestSelected(sugObj.uuid)} className="autocomplete-suggestion-item">{sugObj.suggestion}</span>)
+                            suggestions.get().map(sugObj => <Highlighter searchText={searchText} sugObj={sugObj} handleSuggestSelected={handleSuggestSelected} />)
                         }
                     </div>
                 )

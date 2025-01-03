@@ -27,3 +27,11 @@
 .autocomplete-suggestion-item:hover {
     background-color: silver;
 }
+
+.autocomplete-suggestion-highlight-match {
+    font-weight: 800;
+}
+
+.autocomplete-suggestion-highlight-history {
+    font-style: italic;
+}
