@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { AutocompleteProps } from "./common.types";
-import { debounce, throttle } from "./service/utility.service";
+import { throttle } from "./service/utility.service";
 import { addRecentSearchToLocalStorage, getRecentSearchesFromLocalStorage } from "./service/memory.service";
 import "./autocomplete.styles.css";
 import SuggestionModel from "./model/suggestions.model";
@@ -10,14 +10,8 @@ import currentCachedModel from "./model/currentCached.model";
 function AutoComplete(props:AutocompleteProps) {
     const { suggestionApiCall, searchApiCall, suggestionsLimit = 5, userLastSearchMemoryLimit = 10, throttleTime = 300, style } = props;
     const [searchText, setSearchText] = useState<string>('');
-    const [searched, setSearched] = useState<string | false | 'searching'>(false);
     const [searchFocused, setSearchFocused] = useState<boolean>(false);
     const [suggestions, setSuggestions] = useState<SuggestionModel>(getRecentSearchesFromLocalStorage(suggestionsLimit));
-
-    let triggerSearchDebounce = debounce(async (...args) => {
-        let showSearchedData = await submitSearch(args[0]);
-        setSearched(showSearchedData);
-    }, 1000);
 
     const populateSuggestions = async(searchText:string) => {
         let newSuggestions = await suggestionApiCall(searchText);
@@ -42,17 +36,6 @@ function AutoComplete(props:AutocompleteProps) {
         setSuggestions(_ => getRecentSearchesFromLocalStorage(suggestionsLimit));
     }
 
-    const submitSearch = async (searchId: string):Promise<string> => {
-        addRecentSearchToLocalStorage(
-            {
-                suggestion: searchText,
-                uuid: searchId
-            },
-            userLastSearchMemoryLimit
-        );
-        return searchApiCall(searchId);
-    }
-
     const handleSearchInputChange = (event:React.ChangeEvent<HTMLInputElement>) => {
         let value = event.target.value;
         setSearchText(value);
@@ -71,16 +54,22 @@ function AutoComplete(props:AutocompleteProps) {
 
     const handleSearchBoxEnterPressed = (event:React.KeyboardEvent<HTMLInputElement>) => {
         if(event.key === searchOnKeyUp) {
-            setSearched(`Please select a user from suggestions.`)
+            searchApiCall({text: searchText});
         }
     }
 
     const handleSuggestSelected = (searchId:string) => {
         if (suggestions.checkId(searchId)) {
-            triggerSearchDebounce(searchId);
+            searchApiCall({id: searchId});
+            addRecentSearchToLocalStorage(
+                {
+                    suggestion: searchText,
+                    uuid: searchId
+                },
+                userLastSearchMemoryLimit
+            );
         }
         setSearchFocused(false);
-        setSearched('searching');
     }
 
     const handleSearchFocusToggle = (event: MouseEvent) => {
@@ -115,7 +104,6 @@ function AutoComplete(props:AutocompleteProps) {
                     </div>
                 )
             }
-            {searched && <span className="autocomplete-search-outcome">{searched}{searched === "searching" && "..."}</span>}
         </div>
     )
 }

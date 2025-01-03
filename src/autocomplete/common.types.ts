@@ -20,7 +20,7 @@ type AutocompleteProps = {
      * @param search : string on which actual search will happen
      * @returns : void
      */
-    searchApiCall: (searchId:string) => Promise<string>,
+    searchApiCall: (searchContent:{id?: string, text?: string}) => void,
     /**
      * Set how many suggestions to show
      * By default it uses 5
